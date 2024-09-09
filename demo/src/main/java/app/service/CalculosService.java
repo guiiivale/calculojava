@@ -1,6 +1,7 @@
 package app.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,38 @@ public class CalculosService {
 	
 	private double media(List<Integer> lista) {
 		return (double) this.somar(lista) / lista.size();
+	}
+	
+	public int maiorNumeroLista(List<Integer> lista) {
+	    return lista.stream().max(Integer::compare).orElseThrow(() -> new RuntimeException("Lista vazia"));
+	}
+
+	public int menorNumeroLista(List<Integer> lista) {
+	    return lista.stream().min(Integer::compare).orElseThrow(() -> new RuntimeException("Lista vazia"));
+	}
+
+	public int totalElementosLista(List<Integer> lista) {
+	    return lista.size();
+	}
+
+	public int multiplicar(List<Integer> lista) {
+	    return lista.stream().reduce(1, (a, b) -> a * b);
+	}
+
+	public int moda(List<Integer> lista) {
+	    return lista.stream()
+	        .reduce((a, b) -> lista.stream().filter(num -> num.equals(a)).count() >= lista.stream().filter(num -> num.equals(b)).count() ? a : b)
+	        .orElseThrow(() -> new RuntimeException("Lista vazia"));
+	}
+
+	public double mediana(List<Integer> lista) {
+	    List<Integer> sorted = lista.stream().sorted().collect(Collectors.toList());
+	    int middle = sorted.size() / 2;
+	    if (sorted.size() % 2 == 0) {
+	        return (sorted.get(middle - 1) + sorted.get(middle)) / 2.0;
+	    } else {
+	        return sorted.get(middle);
+	    }
 	}
 
 }
